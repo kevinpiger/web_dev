@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖像解析平台 - 網頁操作流程總覽 Demo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .flow-btn-active { border-color: #2563eb; background-color: #eff6ff; color: #1d4ed8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-600 text-white rounded-lg shadow-sm">
+                        <i data-lucide="layout-grid" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">圖像解析平台｜網頁操作流程總覽</h1>
+                        <p class="text-xs text-slate-500">從登入到完成解析的完整流程，並記錄每張圖片的解析過程與驗證循環</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="switchStep(0)" class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-md transition flex items-center">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5 mr-1"></i> 切換登入頁
+                    </button>
+                    <button onclick="resetDemo()" class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition shadow-sm">
+                        重置 Demo 流程
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Flow Stepper Section -->
+    <section class="bg-white border-b border-slate-200 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2 mb-3">
+                <!-- Step 0: 登入 -->
+                <button onclick="switchStep(0)" id="flow-btn-0" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">01</div>
+                    <span class="text-xs font-medium truncate w-full">登入</span>
+                </button>
+
+                <!-- Step 1: 任務總覽 -->
+                <button onclick="switchStep(1)" id="flow-btn-1" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-blue-600 bg-blue-50 text-blue-700 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mb-1">02</div>
+                    <span class="text-xs font-medium truncate w-full">任務總覽</span>
+                </button>
+
+                <!-- Step 2: 上傳資料 -->
+                <button onclick="switchStep(2)" id="flow-btn-2" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">03</div>
+                    <span class="text-xs font-medium truncate w-full">上傳資料</span>
+                </button>
+
+                <!-- Step 3: 候選內容確認 -->
+                <button onclick="switchStep(3)" id="flow-btn-3" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">03</div>
+                    <span class="text-xs font-medium truncate w-full">候選內容確認</span>
+                </button>
+
+                <!-- Step 4: 編輯解析範圍 -->
+                <button onclick="switchStep(4)" id="flow-btn-4" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">04</div>
+                    <span class="text-xs font-medium truncate w-full">編輯解析範圍</span>
+                </button>
+
+                <!-- Step 5: 確認解析清單 -->
+                <button onclick="switchStep(5)" id="flow-btn-5" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">06</div>
+                    <span class="text-xs font-medium truncate w-full">確認解析清單</span>
+                </button>
+
+                <!-- Step 6: 執行解析 -->
+                <button onclick="switchStep(6)" id="flow-btn-6" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">07</div>
+                    <span class="text-xs font-medium truncate w-full">執行解析</span>
+                </button>
+
+                <!-- Step 7: 解析工作台 -->
+                <button onclick="switchStep(7)" id="flow-btn-7" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">08</div>
+                    <span class="text-xs font-medium truncate w-full">解析工作台</span>
+                </button>
+
+                <!-- Step 8: 任務完成 -->
+                <button onclick="switchStep(8)" id="flow-btn-8" class="flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center">
+                    <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1">09</div>
+                    <span class="text-xs font-medium truncate w-full">任務完成</span>
+                </button>
+            </div>
+
+            <!-- Status Legends Bar -->
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+                <div class="flex space-x-4">
+                    <span class="font-semibold text-slate-600">狀態說明：</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-slate-300 mr-1.5"></span> 草稿</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> 準備解析</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-1.5 animate-pulse"></span> 解析中</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> 需要確認</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-600 mr-1.5"></span> 已完成</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span> 執行失敗</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dynamic Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <aside role="note" style="padding:16px;border:1px solid #93c5fd;border-radius:12px;background:#eff6ff;color:#1e3a8a;line-height:1.7">
+            <strong>流程更新：03 / 03A 暫存流程（2026-09-06）</strong>
+            <p>03 僅上傳檔案。03A 新增任務時挑選既有檔案、上傳新檔，並當場匡選命名；可逐筆暫存，下次繼續編輯。</p>
+            <p>原候選內容確認流程已由 03A 取代。下方保留舊版畫面供設計參考，尚未接上新版 API。</p>
+            <p>派送後解析清單凍結；PDF 頁面底圖與裁切圖留待後續實作。</p>
+        </aside>
+
+
+        <!-- 0. 登入面板 -->
+        <section id="step-panel-0" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-8 max-w-md mx-auto">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow">
+                    <i data-lucide="scan" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800">圖像解析平台</h2>
+                <p class="text-xs text-slate-500 mt-1">使用 SSO 或帳號登入以繼續</p>
+            </div>
+
+            <div class="space-y-4">
+                <button onclick="switchStep(1)" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow text-xs transition flex items-center justify-center">
+                    SSO 單一登入
+                </button>
+                
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t border-slate-200"></div>
+                    <span class="flex-shrink mx-2 text-[10px] text-slate-400 uppercase">或使用帳號登入</span>
+                    <div class="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-slate-600 mb-1">電子郵件</label>
+                        <input type="email" value="name@company.com" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 mb-1">密碼</label>
+                        <input type="password" value="••••••••" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <label class="flex items-center"><input type="checkbox" checked class="rounded border-slate-300 text-blue-600 mr-1"> 記住我</label>
+                        <a href="#" class="text-blue-600 hover:underline">忘記密碼？</a>
+                    </div>
+                </div>
+
+                <button onclick="switchStep(1)" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs transition">
+                    登入
+                </button>
+            </div>
+        </section>
+
+        <!-- 1. 任務總覽 / 歷史記錄 -->
+        <section id="step-panel-1" class="step-panel bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                        <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">1</span>
+                        任務總覽 / 歷史記錄
+                    </h2>
+                </div>
+                <button onclick="switchStep(2)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow flex items-center transition">
+                    <i data-lucide="plus" class="w-4 h-4 mr-1"></i> 新增解析任務
+                </button>
+            </div>
+
+            <!-- Summary KPI Badges -->
+            <div class="grid grid-cols-5 gap-3 mb-6 text-center">
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-[11px] text-slate-500 block">全部</span>
+                    <span class="text-xl font-bold text-slate-800">24</span>
+                </div>
+                <div class="p-3 bg-blue-50/50 border border-blue-200 rounded-lg">
+                    <span class="text-[11px] text-blue-600 block">解析中</span>
+                    <span class="text-xl font-bold text-blue-700">2</span>
+                </div>
+                <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-lg">
+                    <span class="text-[11px] text-amber-600 block">需要確認</span>
+                    <span class="text-xl font-bold text-amber-700">3</span>
+                </div>
+                <div class="p-3 bg-emerald-50/50 border border-emerald-200 rounded-lg">
+                    <span class="text-[11px] text-emerald-600 block">已完成</span>
+                    <span class="text-xl font-bold text-emerald-700">18</span>
+                </div>
+                <div class="p-3 bg-rose-50/50 border border-rose-200 rounded-lg">
+                    <span class="text-[11px] text-rose-600 block">失敗</span>
+                    <span class="text-xl font-bold text-rose-700">1</span>
+                </div>
+            </div>
+
+            <!-- Task List Table -->
+            <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                <table class="w-full text-xs text-left">
+                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">任務名稱</th>
+                            <th class="p-3">來源</th>
+                            <th class="p-3">解析項目</th>
+                            <th class="p-3">狀態</th>
+                            <th class="p-3">最後更新</th>
+                            <th class="p-3 text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50 cursor-pointer" onclick="switchStep(7)">
+                            <td class="p-3 font-medium text-slate-800">datasheet_A</td>
+                            <td class="p-3">PDF</td>
+                            <td class="p-3">12</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-medium">解析中</span></td>
+                            <td class="p-3 text-slate-400">2026/05/18 10:32</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 cursor-pointer" onclick="switchStep(7)">
+                            <td class="p-3 font-medium text-slate-800">timing_test</td>
+                            <td class="p-3">Images</td>
+                            <td class="p-3">8</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-medium">需要確認</span></td>
+                            <td class="p-3 text-slate-400">2026/05/17 16:40</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 cursor-pointer" onclick="switchStep(8)">
+                            <td class="p-3 font-medium text-slate-800">chip_manual</td>
+                            <td class="p-3">PDF</td>
+                            <td class="p-3">23</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">已完成</span></td>
+                            <td class="p-3 text-slate-400">2026/05/16 18:12</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. 上傳資料 -->
+        <section id="step-panel-2" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">2</span>
+                    上傳資料
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dropzone Box -->
+                <div class="border-2 border-dashed border-blue-200 bg-blue-50/40 hover:bg-blue-50 hover:border-blue-400 transition rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-3">
+                        <i data-lucide="upload-cloud" class="w-7 h-7"></i>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700">拖放檔案到這裡，或</p>
+                    <button class="mt-3 px-4 py-2 bg-blue-600 text-white text-xs font-medium rounded-lg shadow hover:bg-blue-700 transition">選擇檔案</button>
+                    <p class="text-[10px] text-slate-400 mt-3">支援格式：JPG、PNG、PDF（檔案大小 200MB 內）</p>
+                </div>
+
+                <!-- File Progress List -->
+                <div class="flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-semibold text-slate-700 mb-2">已選取檔案 (3)</h3>
+                        <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                            <span class="font-medium text-slate-700">datasheet.pdf</span>
+                            <span class="text-slate-400">2.4 MB</span>
+                            <span class="text-emerald-600 font-semibold">已上傳</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                            <span class="font-medium text-slate-700">diagram_01.png</span>
+                            <span class="text-slate-400">1.1 MB</span>
+                            <span class="text-emerald-600 font-semibold">已上傳</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                            <span class="font-medium text-slate-700">flowchart_02.jpg</span>
+                            <span class="text-slate-400">0.9 MB</span>
+                            <span class="text-emerald-600 font-semibold">已上傳</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-4">
+                        <button onclick="switchStep(3)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow transition">
+                            下一步：候選內容確認
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 候選內容確認 -->
+        <section id="step-panel-3" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">3</span>
+                    候選內容確認
+                </h2>
+                <span class="text-xs text-slate-500">已選取 6 / 12</span>
+            </div>
+
+            <!-- Grid of Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                <!-- Card 1 -->
+                <div class="border-2 border-blue-500 bg-blue-50/20 rounded-lg p-2 relative">
+                    <input type="checkbox" checked class="absolute top-3 right-3 z-10 text-blue-600 rounded">
+                    <div class="h-28 bg-white border border-slate-200 rounded flex items-center justify-center mb-2 shadow-inner">
+                        <i data-lucide="file-image" class="w-8 h-8 text-blue-400"></i>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 block text-center">Page 1</span>
+                </div>
+                <!-- Card 2 -->
+                <div class="border-2 border-blue-500 bg-blue-50/20 rounded-lg p-2 relative">
+                    <input type="checkbox" checked class="absolute top-3 right-3 z-10 text-blue-600 rounded">
+                    <div class="h-28 bg-white border border-slate-200 rounded flex items-center justify-center mb-2 shadow-inner">
+                        <i data-lucide="file-image" class="w-8 h-8 text-blue-400"></i>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 block text-center">Page 2</span>
+                </div>
+                <!-- Card 3 -->
+                <div class="border border-slate-200 rounded-lg p-2 relative">
+                    <input type="checkbox" class="absolute top-3 right-3 z-10 text-slate-400 rounded">
+                    <div class="h-28 bg-white border border-slate-200 rounded flex items-center justify-center mb-2 shadow-inner">
+                        <i data-lucide="file-image" class="w-8 h-8 text-slate-300"></i>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 block text-center">Page 3</span>
+                </div>
+                <!-- Card 4 -->
+                <div class="border-2 border-blue-500 bg-blue-50/20 rounded-lg p-2 relative">
+                    <input type="checkbox" checked class="absolute top-3 right-3 z-10 text-blue-600 rounded">
+                    <div class="h-28 bg-white border border-slate-200 rounded flex items-center justify-center mb-2 shadow-inner">
+                        <i data-lucide="layout" class="w-8 h-8 text-blue-500"></i>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 block text-center">Page 4</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button onclick="switchStep(2)" class="px-4 py-2 border border-slate-300 text-slate-600 text-xs rounded-lg">上一步</button>
+                <button onclick="switchStep(4)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow">
+                    下一步：編輯解析範圍 (6)
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. 編輯解析範圍 (以 Page 4 為例) -->
+        <section id="step-panel-4" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">4</span>
+                    候選內容範圍 (以 Page 4 為例)
+                </h2>
+                <div class="flex items-center space-x-2 text-xs text-slate-500">
+                    <button class="px-2 py-1 border rounded hover:bg-slate-50">&lt; 上頁</button>
+                    <span>4 / 12</span>
+                    <button class="px-2 py-1 border rounded hover:bg-slate-50">下頁 &gt;</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Visual Canvas Region -->
+                <div class="lg:col-span-2 border border-slate-300 rounded-xl bg-slate-100 p-4 relative min-h-[320px] flex items-center justify-center">
+                    <div class="bg-white border border-slate-200 rounded-lg shadow-sm w-full max-w-sm h-72 relative p-4 flex flex-col justify-between">
+                        <div class="absolute top-10 left-6 right-10 h-24 border-2 border-dashed border-rose-500 bg-rose-500/10 rounded p-1">
+                            <span class="bg-rose-500 text-white text-[9px] px-1 rounded font-bold">ROI 1</span>
+                        </div>
+                        <div class="absolute bottom-6 right-6 w-32 h-16 border-2 border-dashed border-amber-500 bg-amber-500/10 rounded p-1">
+                            <span class="bg-amber-500 text-white text-[9px] px-1 rounded font-bold">ROI 2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-600 uppercase mb-2">解析方式</h3>
+                        <div class="space-y-2 text-xs mb-4">
+                            <label class="flex items-center space-x-2"><input type="radio" name="parse-mode"> <span>不解析此頁</span></label>
+                            <label class="flex items-center space-x-2"><input type="radio" name="parse-mode"> <span>整張解析</span></label>
+                            <label class="flex items-center space-x-2"><input type="radio" name="parse-mode" checked> <span class="font-bold text-blue-600">選擇區域 ROI</span></label>
+                        </div>
+
+                        <h3 class="text-xs font-bold text-slate-600 uppercase mb-2">已選區域</h3>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center p-2 bg-rose-50 border border-rose-200 rounded text-rose-700">
+                                <span>ROI 1</span>
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5 cursor-pointer"></i>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-amber-50 border border-amber-200 rounded text-amber-700">
+                                <span>ROI 2</span>
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5 cursor-pointer"></i>
+                            </div>
+                        </div>
+                        <button class="mt-3 w-full py-1.5 border border-dashed border-blue-300 text-blue-600 text-xs rounded-lg hover:bg-blue-50">+ 新增區域</button>
+                    </div>
+
+                    <div class="flex justify-between pt-3 border-t border-slate-100">
+                        <button onclick="switchStep(3)" class="px-3 py-1.5 border border-slate-300 text-xs rounded-lg">取消</button>
+                        <button onclick="switchStep(5)" class="px-4 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg shadow">確認此頁</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 確認解析清單 -->
+        <section id="step-panel-5" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">5</span>
+                    確認解析清單 (本次共 6 個項目將進行解析)
+                </h2>
+            </div>
+
+            <div class="overflow-x-auto border border-slate-200 rounded-lg mb-6">
+                <table class="w-full text-xs text-left">
+                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">#</th>
+                            <th class="p-3">來源</th>
+                            <th class="p-3">頁面</th>
+                            <th class="p-3">解析範圍</th>
+                            <th class="p-3">類型</th>
+                            <th class="p-3 text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr>
+                            <td class="p-3">1</td>
+                            <td class="p-3">datasheet.pdf</td>
+                            <td class="p-3">2</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded">ROI 1</span></td>
+                            <td class="p-3">Flowchart</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">2</td>
+                            <td class="p-3">datasheet.pdf</td>
+                            <td class="p-3">2</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded">ROI 2</span></td>
+                            <td class="p-3">Flowchart</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">3</td>
+                            <td class="p-3">datasheet.pdf</td>
+                            <td class="p-3">4</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded">整張</span></td>
+                            <td class="p-3">Flowchart</td>
+                            <td class="p-3 text-right text-slate-400">•••</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="switchStep(4)" class="px-4 py-2 border border-slate-300 text-slate-600 text-xs rounded-lg">上一步</button>
+                <button onclick="switchStep(6)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow">開始解析</button>
+            </div>
+        </section>
+
+        <!-- 6. 執行解析 -->
+        <section id="step-panel-6" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">6</span>
+                    執行解析 (解析進度 4 / 6 - 66%)
+                </h2>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs">
+                    <span class="font-semibold text-slate-700">1. Page 2 - ROI 1</span>
+                    <span class="text-emerald-700 font-bold">已完成 (True)</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs">
+                    <span class="font-semibold text-slate-700">2. Page 2 - ROI 2</span>
+                    <span class="text-amber-700 font-bold">已完成 (Partial)</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+                    <span class="font-semibold text-slate-700">3. Page 4 - Whole</span>
+                    <span class="text-blue-600 font-bold animate-pulse">解析中...</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="switchStep(1)" class="px-4 py-2 border border-slate-300 text-slate-600 text-xs rounded-lg">返回總覽</button>
+                <button onclick="switchStep(7)" class="px-5 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg shadow">前往解析工作台</button>
+            </div>
+        </section>
+
+        <!-- 7. 解析工作台 (單張詳情: Page 4 - ROI 1) -->
+        <section id="step-panel-7" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center mr-2">7</span>
+                    解析工作台 (單張詳情: Page 4 - ROI 1)
+                </h2>
+                <div class="flex space-x-2 text-xs">
+                    <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50">結果</button>
+                    <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50">解析歷程</button>
+                    <button class="px-3 py-1.5 bg-blue-600 text-white rounded font-medium">編輯</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Source ROI -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+                    <span class="text-xs font-bold text-slate-500 block mb-2">原始 ROI</span>
+                    <div class="h-44 bg-white border border-slate-200 rounded flex items-center justify-center text-xs text-slate-400">
+                        <i data-lucide="image" class="w-10 h-10 text-slate-300"></i>
+                    </div>
+                </div>
+
+                <!-- Final Result -->
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-slate-500 block mb-2">最終結果 (Mermaid)</span>
+                        <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs space-y-1">
+                            <p class="font-bold text-amber-800">驗證結果：Partial (需要確認)</p>
+                            <p class="text-slate-600">類型: Flowchart / 驗證回合: 3</p>
+                        </div>
+                    </div>
+
+                    <!-- Flow Loops Indicator -->
+                    <div class="flex items-center justify-between pt-3 text-[10px] text-slate-500 border-t border-slate-200">
+                        <span>Round 1: Verify False</span>
+                        <span>&rarr; Round 2: Verify Partial</span>
+                        <span>&rarr; <b class="text-emerald-600">Round 3: Verify True (Final)</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-2">
+                <button onclick="switchStep(6)" class="px-4 py-2 border border-slate-300 text-slate-600 text-xs rounded-lg">重新解析</button>
+                <button onclick="switchStep(8)" class="px-5 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg shadow">確認此結果</button>
+            </div>
+        </section>
+
+        <!-- 8. 任務完成 (總覽與匯出) -->
+        <section id="step-panel-8" class="step-panel hidden bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6 pb-3 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center">
+                    <span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center mr-2">8</span>
+                    任務完成 (總覽)
+                </h2>
+                <div class="flex space-x-2">
+                    <button onclick="switchStep(1)" class="px-4 py-2 border border-slate-300 text-slate-600 text-xs rounded-lg">返回總覽</button>
+                    <button class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow flex items-center">
+                        <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> 匯出結果 (ZIP / HTML / Mermaid)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Metric Summary Boxes -->
+            <div class="grid grid-cols-4 gap-4 mb-6 text-center">
+                <div class="p-3 bg-slate-50 border rounded-lg">
+                    <span class="text-xs text-slate-500">解析項目</span>
+                    <p class="text-lg font-bold text-slate-800">6</p>
+                </div>
+                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <span class="text-xs text-emerald-600">已確認</span>
+                    <p class="text-lg font-bold text-emerald-700">5</p>
+                </div>
+                <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <span class="text-xs text-amber-600">需要確認</span>
+                    <p class="text-lg font-bold text-amber-700">1</p>
+                </div>
+                <div class="p-3 bg-rose-50 border border-rose-200 rounded-lg">
+                    <span class="text-xs text-rose-600">失敗</span>
+                    <p class="text-lg font-bold text-rose-700">0</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Architecture & Format Reference Cards -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Loop Flow -->
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm text-xs">
+            <h4 class="font-bold text-slate-800 mb-2 flex items-center">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 text-blue-600 mr-1.5"></i> 回頭修改流程
+            </h4>
+            <p class="text-slate-500 leading-relaxed">
+                若結果不理想，可依問題來源回到對應步驟重新處理（如 ROI/輸入問題可退回編輯範圍；內容問題可直接重辦驗證）。
+            </p>
+        </div>
+
+        <!-- Export Formats -->
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm text-xs">
+            <h4 class="font-bold text-slate-800 mb-2 flex items-center">
+                <i data-lucide="file-output" class="w-4 h-4 text-emerald-600 mr-1.5"></i> 支援匯出格式
+            </h4>
+            <ul class="text-slate-600 space-y-1">
+                <li>• Mermaid (.mmd) / WaveDrom (.json)</li>
+                <li>• PNG 圖片 / HTML 報告 / ZIP 壓縮包</li>
+            </ul>
+        </div>
+
+        <!-- Description -->
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm text-xs">
+            <h4 class="font-bold text-slate-800 mb-2 flex items-center">
+                <i data-lucide="info" class="w-4 h-4 text-amber-600 mr-1.5"></i> 說明
+            </h4>
+            <p class="text-slate-500 leading-relaxed">
+                系統自動記錄每張圖片的解析過程與驗證循環，支援人工編輯與重新驗證，直到確認結果為止。
+            </p>
+        </div>
+    </section>
+
+    <!-- Interactive Script -->
+    <script>
+        lucide.createIcons();
+
+        function switchStep(stepNumber) {
+            document.querySelectorAll('.step-panel').forEach(panel => panel.classList.add('hidden'));
+            const targetPanel = document.getElementById(`step-panel-${stepNumber}`);
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.flow-btn').forEach((btn, idx) => {
+                const circle = btn.querySelector('div');
+                if (idx === stepNumber) {
+                    btn.className = "flow-btn flex flex-col items-center p-2 rounded-lg border border-blue-600 bg-blue-50 text-blue-700 transition text-center shadow-sm";
+                    if (circle) circle.className = "w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mb-1";
+                } else {
+                    btn.className = "flow-btn flex flex-col items-center p-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition text-center";
+                    if (circle) circle.className = "w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold mb-1";
+                }
+            });
+        }
+
+        function resetDemo() {
+            switchStep(1);
+        }
+    </script>
+</body>
+</html>

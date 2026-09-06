@@ -1,0 +1,323 @@
+{
+  "description": "test_31 結構範例；UUID 為 demo ID，非資料庫既有紀錄。圖片需另存實際 storage 檔案。",
+  "task_id": "de6aed5e-8d14-58ab-b65f-46615c9f28f1",
+  "parse_item_id": "14cb551e-638a-5675-96cb-cdd1c874772f",
+  "execution_id": "3df34905-b794-5e80-ba06-ce0f99264996",
+  "result_id": "b3ea285d-e95c-51d7-9df9-529b80b6c4b8",
+  "stored_result_info": {
+    "schema_version": 2,
+    "type": "TIMING",
+    "content_type": "WAVEDROM",
+    "content": "{\n  \"signal\": [\n    {\n      \"name\": \"Common Clock - clk\",\n      \"wave\": \"p..|..\",\n      \"period\": 2\n    },\n    {},\n    [\n      \"Master Outputs\",\n      {\n        \"name\": \"Cycle - cyc_o\",\n        \"wave\": \"0.1...|..0.\"\n      },\n      {\n        \"name\": \"Address - adr_o\",\n        \"wave\": \"x.2...|..x.\",\n        \"data\": \"Valid\"\n      },\n      {\n        \"name\": \"Data - dat_o\",\n        \"wave\": \"x.....|....\"\n      },\n      {\n        \"name\": \"Write Enable - we_o\",\n        \"wave\": \"0.....|....\"\n      },\n      {\n        \"name\": \"Strobe - stb_o\",\n        \"wave\": \"0.1.0.|....\"\n      }\n    ],\n    {},\n    [\n      \"Master Inputs\",\n      {\n        \"name\": \"Data - dat_i\",\n        \"wave\": \"x.....|2.x.\",\n        \"data\": \"Valid\"\n      },\n      {\n        \"name\": \"Acknowledgment - ack_i\",\n        \"wave\": \"0.....|1.0.\"\n      }\n    ],\n    {}\n  ]\n}",
+    "source": "IMPORTED",
+    "note": "參考報告最終 JSON",
+    "workbench": {
+      "schema_version": 1,
+      "content_sha256": "4fb449cf8423c20dada93c95517bf9dfeeb83d1c49fd79ea2a3dfac31f04254d",
+      "source_artifact_id": "11f6bc80-f365-52de-9771-aaa2e6890024",
+      "artifacts": [
+        {
+          "id": "11f6bc80-f365-52de-9771-aaa2e6890024",
+          "storage_key": "results/3df34905-b794-5e80-ba06-ce0f99264996/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/11f6bc80-f365-52de-9771-aaa2e6890024.png",
+          "media_type": "image/png"
+        },
+        {
+          "id": "d7f422e1-245e-5fb5-9a2d-24d006440ff6",
+          "storage_key": "results/3df34905-b794-5e80-ba06-ce0f99264996/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/d7f422e1-245e-5fb5-9a2d-24d006440ff6.png",
+          "media_type": "image/png"
+        },
+        {
+          "id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+          "storage_key": "results/3df34905-b794-5e80-ba06-ce0f99264996/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/640c717d-5ca1-541a-bc3c-ffb1834d4066.png",
+          "media_type": "image/png"
+        }
+      ],
+      "render_versions": [
+        {
+          "id": "2786d277-8968-5e6a-8683-e032ec296a82",
+          "label": "v01",
+          "artifact_id": "d7f422e1-245e-5fb5-9a2d-24d006440ff6",
+          "note": "初版：逐字抄錄圖上印出的 WaveDrom 原始碼（clk period:2 + gap，兩個 group、三個 {} 間隔列）",
+          "result_id": null
+        },
+        {
+          "id": "e0b6af6c-9aab-5efa-a791-9d572198f9bf",
+          "label": "v02",
+          "artifact_id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+          "note": "修正 adr_o：刪除 gap 後多出的一個 '.'，wave 由 x.2...|...x.(12) 改為 x.2...|..x.(11)，Valid→x 交叉回到第9拍、lane 收於第11拍",
+          "result_id": null
+        },
+        {
+          "id": "0812c87d-8f79-558e-92e6-6dd9bc6840b9",
+          "label": "最終",
+          "artifact_id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+          "note": "交付用的最終渲染圖",
+          "result_id": "b3ea285d-e95c-51d7-9df9-529b80b6c4b8"
+        }
+      ],
+      "verification": {
+        "status": "COMPLETED",
+        "match": "TRUE",
+        "rounds": [
+          {
+            "round_no": 1,
+            "checked_at_display": "2026-08-25 23:01:12",
+            "match": "FALSE",
+            "diff_count": 1,
+            "checked_at": null,
+            "diffs": null,
+            "input_result_id": null
+          },
+          {
+            "round_no": 2,
+            "checked_at_display": "2026-08-25 23:05:35",
+            "match": "TRUE",
+            "diff_count": 0,
+            "checked_at": null,
+            "diffs": null,
+            "input_result_id": null
+          }
+        ]
+      },
+      "conversion": {
+        "kind": "TESTBENCH",
+        "language": "VERILOG",
+        "code": "`timescale 1ns / 1ps\n//====================================================================\n// 由 WaveDrom JSON 自動產生的波形重現 testbench\n// 這是「把波形放回時間軸」，不是 RTL 設計推論。\n// 時間基準：1 拍 = BEAT_NS = 10 ns（WaveDrom 只有拍格,\n//           沒有絕對時間，BEAT_NS 是人為指定的。）\n//\n// ★★ 產碼警告 ★★\n//   Common Clock - clk: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Cycle - cyc_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Address - adr_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Data - dat_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Write Enable - we_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Strobe - stb_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Data - dat_i: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Acknowledgment - ack_i: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//====================================================================\n\nmodule wave_tb;\n\n  localparam real BEAT_NS = 10.0;\n\n  // 資料匯流排符號：原圖只給標籤，真實編碼未知，\n  // 以下為「彼此相異」的佔位值，不代表協定實際編碼。\n  localparam [3:0] SYM_VALID = 4'd0;\n\n  reg Common_Clock_clk;\n  reg Cycle_cyc_o;\n  reg [3:0] Address_adr_o;\n  reg Data_dat_o;\n  reg Write_Enable_we_o;\n  reg Strobe_stb_o;\n  reg [3:0] Data_dat_i;\n  reg Acknowledgment_ack_i;\n\n  // ---- Common Clock - clk ----\n  initial begin\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n  end\n\n  // ---- Cycle - cyc_o ----\n  initial begin\n    Cycle_cyc_o = 1'b0;\n    #(2 * BEAT_NS);\n    Cycle_cyc_o = 1'b1;\n    Cycle_cyc_o = 1'b0;\n  end\n\n  // ---- Address - adr_o ----\n  initial begin\n    Address_adr_o = 4'bx;\n    #(2 * BEAT_NS);\n    Address_adr_o = SYM_VALID;\n    Address_adr_o = 4'bx;\n  end\n\n  // ---- Data - dat_o ----\n  initial begin\n    Data_dat_o = 1'bx;\n  end\n\n  // ---- Write Enable - we_o ----\n  initial begin\n    Write_Enable_we_o = 1'b0;\n  end\n\n  // ---- Strobe - stb_o ----\n  initial begin\n    Strobe_stb_o = 1'b0;\n    #(2 * BEAT_NS);\n    Strobe_stb_o = 1'b1;\n    #(2 * BEAT_NS);\n    Strobe_stb_o = 1'b0;\n  end\n\n  // ---- Data - dat_i ----\n  initial begin\n    Data_dat_i = 4'bx;\n    Data_dat_i = SYM_VALID;\n    #(2 * BEAT_NS);\n    Data_dat_i = 4'bx;\n  end\n\n  // ---- Acknowledgment - ack_i ----\n  initial begin\n    Acknowledgment_ack_i = 1'b0;\n    Acknowledgment_ack_i = 1'b1;\n    #(2 * BEAT_NS);\n    Acknowledgment_ack_i = 1'b0;\n  end\n\n  initial begin\n    $dumpfile(\"wave_tb.vcd\");\n    $dumpvars(0, wave_tb);\n    #(12 * BEAT_NS + BEAT_NS);\n    $finish;\n  end\n\nendmodule\n",
+        "metrics": [
+          {
+            "label": "Lane 覆蓋",
+            "value": "8/8"
+          },
+          {
+            "label": "總拍數",
+            "value": "12.0"
+          },
+          {
+            "label": "資料符號",
+            "value": "1"
+          },
+          {
+            "label": "轉態次數",
+            "value": "15"
+          },
+          {
+            "label": "警告數",
+            "value": "8"
+          }
+        ],
+        "table": {
+          "columns": [
+            "lane",
+            "事件",
+            "轉態",
+            "拍數"
+          ],
+          "rows": [
+            [
+              "Common Clock - clk",
+              "6",
+              "5",
+              "12.0"
+            ],
+            [
+              "Cycle - cyc_o",
+              "3",
+              "2",
+              "11.0"
+            ],
+            [
+              "Address - adr_o",
+              "3",
+              "2",
+              "11.0"
+            ],
+            [
+              "Data - dat_o",
+              "1",
+              "0",
+              "11.0"
+            ],
+            [
+              "Write Enable - we_o",
+              "1",
+              "0",
+              "11.0"
+            ],
+            [
+              "Strobe - stb_o",
+              "3",
+              "2",
+              "11.0"
+            ],
+            [
+              "Data - dat_i",
+              "3",
+              "2",
+              "11.0"
+            ],
+            [
+              "Acknowledgment - ack_i",
+              "3",
+              "2",
+              "11.0"
+            ]
+          ]
+        },
+        "warnings": null
+      }
+    }
+  },
+  "public_workbench_derived_fields": {
+    "data_status": "AVAILABLE",
+    "artifacts": [
+      {
+        "id": "11f6bc80-f365-52de-9771-aaa2e6890024",
+        "media_type": "image/png",
+        "content_url": "/api/v1/results/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/artifacts/11f6bc80-f365-52de-9771-aaa2e6890024/content"
+      },
+      {
+        "id": "d7f422e1-245e-5fb5-9a2d-24d006440ff6",
+        "media_type": "image/png",
+        "content_url": "/api/v1/results/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/artifacts/d7f422e1-245e-5fb5-9a2d-24d006440ff6/content"
+      },
+      {
+        "id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+        "media_type": "image/png",
+        "content_url": "/api/v1/results/b3ea285d-e95c-51d7-9df9-529b80b6c4b8/artifacts/640c717d-5ca1-541a-bc3c-ffb1834d4066/content"
+      }
+    ],
+    "render_versions": [
+      {
+        "id": "2786d277-8968-5e6a-8683-e032ec296a82",
+        "label": "v01",
+        "artifact_id": "d7f422e1-245e-5fb5-9a2d-24d006440ff6",
+        "note": "初版：逐字抄錄圖上印出的 WaveDrom 原始碼（clk period:2 + gap，兩個 group、三個 {} 間隔列）",
+        "result_id": null
+      },
+      {
+        "id": "e0b6af6c-9aab-5efa-a791-9d572198f9bf",
+        "label": "v02",
+        "artifact_id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+        "note": "修正 adr_o：刪除 gap 後多出的一個 '.'，wave 由 x.2...|...x.(12) 改為 x.2...|..x.(11)，Valid→x 交叉回到第9拍、lane 收於第11拍",
+        "result_id": null
+      },
+      {
+        "id": "0812c87d-8f79-558e-92e6-6dd9bc6840b9",
+        "label": "最終",
+        "artifact_id": "640c717d-5ca1-541a-bc3c-ffb1834d4066",
+        "note": "交付用的最終渲染圖",
+        "result_id": "b3ea285d-e95c-51d7-9df9-529b80b6c4b8"
+      }
+    ],
+    "verification": {
+      "status": "COMPLETED",
+      "match": "TRUE",
+      "rounds": [
+        {
+          "round_no": 1,
+          "checked_at_display": "2026-08-25 23:01:12",
+          "match": "FALSE",
+          "diff_count": 1,
+          "checked_at": null,
+          "diffs": null,
+          "input_result_id": null
+        },
+        {
+          "round_no": 2,
+          "checked_at_display": "2026-08-25 23:05:35",
+          "match": "TRUE",
+          "diff_count": 0,
+          "checked_at": null,
+          "diffs": null,
+          "input_result_id": null
+        }
+      ]
+    },
+    "conversion": {
+      "kind": "TESTBENCH",
+      "language": "VERILOG",
+      "code": "`timescale 1ns / 1ps\n//====================================================================\n// 由 WaveDrom JSON 自動產生的波形重現 testbench\n// 這是「把波形放回時間軸」，不是 RTL 設計推論。\n// 時間基準：1 拍 = BEAT_NS = 10 ns（WaveDrom 只有拍格,\n//           沒有絕對時間，BEAT_NS 是人為指定的。）\n//\n// ★★ 產碼警告 ★★\n//   Common Clock - clk: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Cycle - cyc_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Address - adr_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Data - dat_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Write Enable - we_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Strobe - stb_o: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Data - dat_i: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//   Acknowledgment - ack_i: wave 含省略段 '|'，橫軸不是等比例時間軸 —— 省略段兩側的拍距不可直接換算成延遲\n//====================================================================\n\nmodule wave_tb;\n\n  localparam real BEAT_NS = 10.0;\n\n  // 資料匯流排符號：原圖只給標籤，真實編碼未知，\n  // 以下為「彼此相異」的佔位值，不代表協定實際編碼。\n  localparam [3:0] SYM_VALID = 4'd0;\n\n  reg Common_Clock_clk;\n  reg Cycle_cyc_o;\n  reg [3:0] Address_adr_o;\n  reg Data_dat_o;\n  reg Write_Enable_we_o;\n  reg Strobe_stb_o;\n  reg [3:0] Data_dat_i;\n  reg Acknowledgment_ack_i;\n\n  // ---- Common Clock - clk ----\n  initial begin\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b1;\n    #(1 * BEAT_NS);\n    Common_Clock_clk = 1'b0;\n  end\n\n  // ---- Cycle - cyc_o ----\n  initial begin\n    Cycle_cyc_o = 1'b0;\n    #(2 * BEAT_NS);\n    Cycle_cyc_o = 1'b1;\n    Cycle_cyc_o = 1'b0;\n  end\n\n  // ---- Address - adr_o ----\n  initial begin\n    Address_adr_o = 4'bx;\n    #(2 * BEAT_NS);\n    Address_adr_o = SYM_VALID;\n    Address_adr_o = 4'bx;\n  end\n\n  // ---- Data - dat_o ----\n  initial begin\n    Data_dat_o = 1'bx;\n  end\n\n  // ---- Write Enable - we_o ----\n  initial begin\n    Write_Enable_we_o = 1'b0;\n  end\n\n  // ---- Strobe - stb_o ----\n  initial begin\n    Strobe_stb_o = 1'b0;\n    #(2 * BEAT_NS);\n    Strobe_stb_o = 1'b1;\n    #(2 * BEAT_NS);\n    Strobe_stb_o = 1'b0;\n  end\n\n  // ---- Data - dat_i ----\n  initial begin\n    Data_dat_i = 4'bx;\n    Data_dat_i = SYM_VALID;\n    #(2 * BEAT_NS);\n    Data_dat_i = 4'bx;\n  end\n\n  // ---- Acknowledgment - ack_i ----\n  initial begin\n    Acknowledgment_ack_i = 1'b0;\n    Acknowledgment_ack_i = 1'b1;\n    #(2 * BEAT_NS);\n    Acknowledgment_ack_i = 1'b0;\n  end\n\n  initial begin\n    $dumpfile(\"wave_tb.vcd\");\n    $dumpvars(0, wave_tb);\n    #(12 * BEAT_NS + BEAT_NS);\n    $finish;\n  end\n\nendmodule\n",
+      "metrics": [
+        {
+          "label": "Lane 覆蓋",
+          "value": "8/8"
+        },
+        {
+          "label": "總拍數",
+          "value": "12.0"
+        },
+        {
+          "label": "資料符號",
+          "value": "1"
+        },
+        {
+          "label": "轉態次數",
+          "value": "15"
+        },
+        {
+          "label": "警告數",
+          "value": "8"
+        }
+      ],
+      "table": {
+        "columns": [
+          "lane",
+          "事件",
+          "轉態",
+          "拍數"
+        ],
+        "rows": [
+          [
+            "Common Clock - clk",
+            "6",
+            "5",
+            "12.0"
+          ],
+          [
+            "Cycle - cyc_o",
+            "3",
+            "2",
+            "11.0"
+          ],
+          [
+            "Address - adr_o",
+            "3",
+            "2",
+            "11.0"
+          ],
+          [
+            "Data - dat_o",
+            "1",
+            "0",
+            "11.0"
+          ],
+          [
+            "Write Enable - we_o",
+            "1",
+            "0",
+            "11.0"
+          ],
+          [
+            "Strobe - stb_o",
+            "3",
+            "2",
+            "11.0"
+          ],
+          [
+            "Data - dat_i",
+            "3",
+            "2",
+            "11.0"
+          ],
+          [
+            "Acknowledgment - ack_i",
+            "3",
+            "2",
+            "11.0"
+          ]
+        ]
+      },
+      "warnings": null
+    }
+  }
+}

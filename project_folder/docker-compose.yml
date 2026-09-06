@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ai_diagram}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-ai_diagram}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - storage_data:/data/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+
+volumes:
+  db_data:
+  storage_data:
