@@ -34,3 +34,5 @@
 | 2026-09-06 | 操作畫面與重編 | web_slide_v3各頁補10個由v3實際render函式輸出的靜態HTML畫面，02/08含分頁；更新Markdown、重編HTML與skill | 非瀏覽器截圖，無腳本sandbox嵌入；保留50個API細節；未驗證後端 |
 
 | 2026-09-06 | 沙盒 Agent API | 定義 Worker/Agent 獨立憑證、execution attempt、租約、去重及取消規則，新增 internal routers、service、ORM 與 DDL，更新 Todo 與規格 | 僅編輯；未啟動／驗證後端或套用 DDL；Queue runtime 尚待實作 |
+
+| 2026-09-07 | Model flow API | 新增 core.model_flow 七欄、全量清單／新增／軟刪除 API，沿用登入與分層；補建表 SQL 與 API 文件 | 未連線或套用 DB；本機缺少 pytest 與後端依賴，未執行 API／DB 整合驗證 |

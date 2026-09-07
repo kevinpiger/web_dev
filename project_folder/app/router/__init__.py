@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 
 from app.router import assets, auth, executions, parse_items, results, tasks, users, workbench
+from app.router import model_flows
 
 api_router = APIRouter()
+api_router.include_router(model_flows.router)
 api_router.include_router(auth.router)
 api_router.include_router(assets.router)
 api_router.include_router(users.router)

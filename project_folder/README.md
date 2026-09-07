@@ -1,5 +1,13 @@
 # AI Diagram Backend
 
+## 模型 flow 清單
+
+新增 `GET /api/v1/model-flows`（完整清單）、`POST /api/v1/model-flows`（新增）、
+`DELETE /api/v1/model-flows/{flow_id}`（軟刪除），皆需登入，使用共用清單。
+資料表為 `core.model_flow`，只有基本七欄。
+既有 DB 請套用 `app/db/schema/02_core/07_model_flow.sql`；
+詳見 [Model flow API](docs/model_flow_api.md)。
+
 FastAPI (async) backend for the AI diagram parsing platform. Self-contained under
 this folder — copy `project_folder/` anywhere and `docker compose up` will run it.
 

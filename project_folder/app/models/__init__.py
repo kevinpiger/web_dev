@@ -9,8 +9,10 @@ from app.models.outbox_event import OutboxEvent
 from app.models.parse_item import ParseItem
 from app.models.result import Result
 from app.models.role import Role
+from app.models.model_flow import ModelFlow
 
 __all__ = [
+    "ModelFlow",
     "ExecutionAttempt",
     "AgentRun",
     "AnalysisTask",
