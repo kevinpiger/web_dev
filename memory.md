@@ -32,3 +32,5 @@
 | 2026-09-06 | 打包架構整理 | docs/package_structure.md盤點目前後端分層、SQL、Docker、交付文件與排除項；標示publisher/worker未完成 | 僅整理架構，未建置或產生後端ZIP，未驗證後端 |
 
 | 2026-09-06 | 操作畫面與重編 | web_slide_v3各頁補10個由v3實際render函式輸出的靜態HTML畫面，02/08含分頁；更新Markdown、重編HTML與skill | 非瀏覽器截圖，無腳本sandbox嵌入；保留50個API細節；未驗證後端 |
+
+| 2026-09-06 | 沙盒 Agent API | 定義 Worker/Agent 獨立憑證、execution attempt、租約、去重及取消規則，新增 internal routers、service、ORM 與 DDL，更新 Todo 與規格 | 僅編輯；未啟動／驗證後端或套用 DDL；Queue runtime 尚待實作 |

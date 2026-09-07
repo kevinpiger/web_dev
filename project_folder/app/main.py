@@ -12,6 +12,7 @@ from app.core.logging import configure_logging
 from app.db import bootstrap
 from app.router import api_router
 from app.router.health import router as health_router
+from app.router.internal_agent import agent_router, worker_router
 
 logger = logging.getLogger(__name__)
 
@@ -43,3 +44,7 @@ register_exception_handlers(app)
 
 app.include_router(health_router)
 app.include_router(api_router, prefix=settings.API_PREFIX)
+
+# Internal credentials are deliberately independent of user access tokens.
+app.include_router(worker_router)
+app.include_router(agent_router)

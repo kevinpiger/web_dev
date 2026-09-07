@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -34,6 +35,14 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # --- Internal sandbox API (disabled until distinct secrets are configured) ---
+    WORKER_API_KEY: str = Field(default="", repr=False)
+    AGENT_JWT_SECRET: str = Field(default="", repr=False)
+    AGENT_TOKEN_TTL_SECONDS: int = Field(default=3600, ge=60, le=86400)
+    AGENT_LEASE_SECONDS: int = Field(default=120, ge=15, le=600)
+    AGENT_MAX_ARTIFACT_MB: int = Field(default=20, ge=1, le=200)
+    AGENT_MAX_ARTIFACTS: int = Field(default=100, ge=1, le=100)
 
     # --- 檔案儲存 ---
     STORAGE_PATH: str = "/data/storage"

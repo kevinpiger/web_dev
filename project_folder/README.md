@@ -230,3 +230,15 @@ CREATE INDEX idx_parse_item_active ON core.parse_item(task_id) WHERE deleted_at 
 ## 主任務總覽 API 精簡（2026-09-06）
 
 GET /api/v1/tasks 改為 {"items": [...]}，一次回傳目前使用者全部未刪除主任務，不分頁、不篩選。每項只回 id、name、status、finished_count、started_at、updated_at、item_count。finished_count 包含成功／失敗／逾時／取消，百分比與全域統計由前端計算。清單的 updated_at 納入子項目、執行與結果變動。詳細契約見 docs/task_list_api_contract.md；GET /tasks/{task_id}/detail 不變。這是取代舊 Page[TaskOut] 的回應契約，前端需同步調整；本次未執行後端驗證。
+
+
+## 沙盒 Agent API
+
+與既有 FastAPI 同部署，獨立 `/internal/worker` 與 `/internal/agent` router。
+Worker 以 `X-Worker-Key` 建立 execution attempt；沙盒僅持有綁定該 execution／attempt 的短效 Bearer token。
+支援輸入／來源讀取、心跳、artifact 上傳、中間結果、原子完成與失敗回報。
+
+詳細請求、回應、取消與重試規則見 [sandbox_agent_api_spec.md](docs/sandbox_agent_api_spec.md)。
+需設定 `.env.example` 的兩組獨立密鑰並部署 `runtime.execution_attempt` 新表；DDL 位於
+`app/db/schema/03_runtime/03_execution_attempt.sql`。本次只編輯，未啟動服務、套用 DDL 或執行後端驗證。
+Broker publisher／consumer、ACK／inbox、退避重送與租約掃描仍待實作。

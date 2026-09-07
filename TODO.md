@@ -248,3 +248,27 @@ python3 <scratchpad>/parseall.py                         # 10 張表欄位解析
 - [ ] 成功／失敗／取消混合時，主任務狀態、finished_count、item_count與摘要一致。
 
 執行順序：先完成P1規格，再依P2→P3→P4→P5→P6安排實作。此清單不是本次已完成實作的宣告；是否開始實作另依後續指示。
+
+
+## 沙盒 Agent API｜本次編輯進度（2026-09-06）
+
+以下「完成」表示程式碼與文件已編輯，不表示已驗證或已部署。
+
+- [x] 定義獨立 Worker Key、短效 Agent JWT、execution_id／attempt_id／jti 綁定。
+- [x] 新增 runtime.execution_attempt ORM 與建表 SQL；未套用資料庫。
+- [x] 新增 Worker 原子領取與狀態查詢端點、租約判斷、有限重試資格。
+- [x] 新增 Agent context、source、heartbeat、artifacts、results、complete、fail 端點。
+- [x] 成果沿用 generated_result_service，保存 result_info.workbench；最終結果與狀態、收據同交易。
+- [x] 以 request_id 及 payload 指紋去重；artifact_id 防覆寫；取消／軟刪／舊 attempt／租約逾時禁止新寫入。
+- [x] 彙整 Agent 完成／失敗／租約回收後的主任務狀態。
+- [x] 將新 router 掛入原 FastAPI、補設定與 API 契約文件。
+- [ ] 部署設定獨立密鑰、TLS／內部路由限制、request body 大小與並行上限；避免記錄 token。
+- [ ] 部署新表 DDL（本次未執行）。
+- [ ] 定義 Schema／解析器進階參數白名單並擴充 context；不直接暴露任意 task.config。
+- [ ] Worker 沙盒啟動器／Agent client 介接：Worker key 留宿主、Agent token 只交指定沙盒。
+- [ ] 實作 Publisher／Broker consumer／inbox、提交後 ACK、可靠重送及退避；不得把本次收據當作 inbox 已完成。
+- [ ] 排程租約逾時掃描與重試：目前透過 Worker 查詢／領取回收，沒有背景掃描程序。
+- [ ] 規劃檔案與 DB 提交不確定時的孤兒檔案清理；清理前須查 DB 引用。
+- [ ] 移植時驗收正常完成、並行領取、JWT 隔離、重送、過期、取消競爭、artifact 越權、retry 上限與 ACK 中斷情境。
+
+規格：project_folder/docs/sandbox_agent_api_spec.md。上述 API 基礎完成不代表前面 P2～P6 的 Worker runtime／Queue 工作已完成。

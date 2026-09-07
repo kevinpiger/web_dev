@@ -1,3 +1,4 @@
+from app.models.execution_attempt import ExecutionAttempt
 from app.models.agent_run import AgentRun
 from app.models.analysis_task import AnalysisTask
 from app.models.app_user import AppUser
@@ -10,6 +11,7 @@ from app.models.result import Result
 from app.models.role import Role
 
 __all__ = [
+    "ExecutionAttempt",
     "AgentRun",
     "AnalysisTask",
     "AppUser",
