@@ -43,3 +43,5 @@
 
 | 2026-09-07 | v4 移除09 | 移除09章節、完成清單及跨頁列印待辦；建立獨立v4預覽並移除09導覽 | 文件重編並檢查6畫面、10內嵌預覽、JSON與連結；v3保留 |
 | 2026-09-08 | 簡易結果寫入 API | 依使用者要求在 main.py 新增免 Token POST /results，傳 execution_id 與 result_info，檢查 execution 存在並鎖定後自動新增 round，保留原 Agent API | main.py AST 語法檢查通過；未啟動服務或連線 DB，未執行 API／DB 整合測試；不改 execution 狀態 |
+
+| 2026-09-08 | 結果 API 路由調整 | 依使用者確認將免 Token 寫入移至 executions router：POST /api/v1/executions/{execution_id}/results，body 僅 result_info；schema/service 分層，移除 main.py 的 POST /results | 保留新增輪次與 execution 狀態不變；未連線 DB |

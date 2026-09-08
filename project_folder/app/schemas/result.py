@@ -1,7 +1,9 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResultOut(BaseModel):
@@ -29,3 +31,11 @@ class ResultAppend(BaseModel):
     content_type: str | None = None
     type: str | None = None
     note: str | None = None
+
+
+class ExecutionResultCreate(BaseModel):
+    """Raw result JSON for the token-free test endpoint."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    result_info: dict[str, Any]

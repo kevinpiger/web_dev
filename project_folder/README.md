@@ -252,12 +252,11 @@ Worker 以 `X-Worker-Key` 建立 execution attempt；沙盒僅持有綁定該 ex
 Broker publisher／consumer、ACK／inbox、退避重送與租約掃描仍待實作。
 # 免 Token 結果寫入測試
 
-`POST /results` 直接定義於 `app/main.py`，不需 Authorization 或 Worker Token。
-傳入資料庫中已存在的 execution UUID 與任意結果 JSON：
+`POST /api/v1/executions/{execution_id}/results` 定義於 `app/router/executions.py`，不需 Authorization 或 Worker Token。
+URL 帶資料庫中已存在的 execution UUID；body 只需結果 JSON（前綴依 API_PREFIX 設定）：
 
 ```json
 {
-  "execution_id": "替換成既有 execution UUID",
   "result_info": {
     "type": "TIMING",
     "content_type": "WAVEDROM",

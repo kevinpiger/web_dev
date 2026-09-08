@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_user, get_db
 from app.models.app_user import AppUser
+from app.models.result import Result
+from app.schemas.result import ExecutionResultCreate, ResultOut
 from app.schemas.common import Page
 from app.schemas.execution import CancelResult, DispatchResult, ExecutionOut
 from app.services import execution_service
@@ -62,3 +64,13 @@ async def cancel_execution(
     user: AppUser = Depends(get_current_user),
 ) -> CancelResult:
     return await execution_service.cancel_execution(db, user.id, execution_id)
+
+
+@router.post("/executions/{execution_id}/results", response_model=ResultOut,
+             status_code=201, summary="免 Token 測試：寫入解析結果")
+async def create_execution_result(
+    execution_id: uuid.UUID,
+    body: ExecutionResultCreate,
+    db: AsyncSession = Depends(get_db),
+) -> Result:
+    return await execution_service.append_test_result(db, execution_id, body)

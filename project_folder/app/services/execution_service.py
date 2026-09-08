@@ -7,6 +7,7 @@ RabbitMQ. Nothing here talks to a broker.
 
 import uuid
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.enums import (
@@ -19,6 +20,9 @@ from app.core.enums import (
 from app.core.exceptions import ConflictError, NotFoundError
 from app.models.analysis_task import AnalysisTask
 from app.models.execution import Execution
+from app.models.result import Result
+from app.repositories.result_repository import ResultRepository
+from app.schemas.result import ExecutionResultCreate
 from app.models.outbox_event import OutboxEvent
 from app.models.parse_item import ParseItem
 from app.repositories.analysis_task_repository import AnalysisTaskRepository
@@ -177,3 +181,25 @@ async def get_execution(
     if execution is None:
         raise NotFoundError("Execution not found")
     return ExecutionOut.model_validate(execution)
+
+
+async def append_test_result(
+    db: AsyncSession, execution_id: uuid.UUID, body: ExecutionResultCreate,
+) -> Result:
+    """Append a raw snapshot without changing the execution lifecycle."""
+    execution = (await db.execute(
+        select(Execution).where(Execution.id == execution_id).with_for_update()
+    )).scalar_one_or_none()
+    if execution is None:
+        raise NotFoundError("Execution not found")
+
+    result = Result(
+        execution_id=execution.id,
+        round_no=await ResultRepository(db).next_round_no(execution.id),
+        status="SUCCEEDED",
+        result_info=body.result_info,
+    )
+    db.add(result)
+    await db.commit()
+    await db.refresh(result)
+    return result
