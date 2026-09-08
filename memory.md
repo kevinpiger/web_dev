@@ -36,3 +36,9 @@
 | 2026-09-06 | 沙盒 Agent API | 定義 Worker/Agent 獨立憑證、execution attempt、租約、去重及取消規則，新增 internal routers、service、ORM 與 DDL，更新 Todo 與規格 | 僅編輯；未啟動／驗證後端或套用 DDL；Queue runtime 尚待實作 |
 
 | 2026-09-07 | Model flow API | 新增 core.model_flow 七欄、全量清單／新增／軟刪除 API，沿用登入與分層；補建表 SQL 與 API 文件 | 未連線或套用 DB；本機缺少 pytest 與後端依賴，未執行 API／DB 整合驗證 |
+
+| 2026-09-07 | 解析步驟契約 | 定義 DRAWER／VERIFY 交替 steps、型別化 output、差異／建議／修改關聯與最終配對；新增 Python schema、JSON Schema、兩輪範例與文件 | 9項契約測試通過（Python 3.12／Pydantic 2.13.5）；尚未接入既有 API／worker，未修改 DB |
+
+| 2026-09-07 | v4 文件 | 保留 v3，產生 web_slide_v4.md／html；08 加入四步流程示意、完整 output 與兩輪 JSON，文末加入 model flow API | 文件檢查通過：7畫面、11內嵌預覽、JSON與章節連結；未啟動後端或修改 DB |
+
+| 2026-09-07 | v4 移除09 | 移除09章節、完成清單及跨頁列印待辦；建立獨立v4預覽並移除09導覽 | 文件重編並檢查6畫面、10內嵌預覽、JSON與連結；v3保留 |

@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 v4 交替解析流程</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#17243b;font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:28px}h1{margin:4px 0 10px;font-size:26px}h2{font-size:18px;margin:0}.eyebrow{color:#2563eb;font-weight:700;letter-spacing:1px}.note{background:#eaf1ff;border:1px solid #cbdcf9;padding:14px 18px;border-radius:8px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}article{padding:20px;background:white;border:1px solid #dce3ed;border-radius:12px;min-width:0}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.num{font-size:21px;color:#2563eb;font-weight:700}.pill{margin-left:auto;background:#e9f7f0;color:#17774c;padding:3px 9px;border-radius:5px;font-size:12px}.meta{color:#637187;font-size:12px;overflow-wrap:anywhere}pre{overflow:auto;background:#132137;color:#d8e8ff;padding:16px;border-radius:8px;font:12px/1.6 ui-monospace,monospace;max-height:380px}summary{cursor:pointer;color:#2563eb}footer{margin-top:18px;color:#637187}@media(max-width:750px){.grid{grid-template-columns:1fr}body{padding:16px}}</style></head><body>
+<div class="eyebrow">08 / WORKBENCH · V4 契約示意</div><h1>單張圖片：解析 → 驗證 → 修正 → 再驗證</h1>
+<p>同一張原圖、同一個解析範圍；每一步保留獨立 output 與輸入關聯。</p>
+<div class="note">01 DRAWER → 02 VERIFY（FALSE）→ 03 DRAWER → 04 VERIFY（TRUE）<br>最終採用步驟 03；對應驗證為步驟 04。以下是示意資料，未連接後端，亦未執行渲染或模型。</div>
+<div class="grid"><article><div class="row"><span class="num">01</span><h2>DRAWER</h2><span class="pill">完整 JSON ＋ 渲染圖</span></div>
+    <p>Initial extraction</p><p class="meta">input_step_id：None</p>
+    <details open><summary>output 完整內容</summary><pre>{
+  &quot;type&quot;: &quot;TIMING&quot;,
+  &quot;content_type&quot;: &quot;WAVEDROM&quot;,
+  &quot;content&quot;: {
+    &quot;signal&quot;: [
+      {
+        &quot;name&quot;: &quot;ack_i&quot;,
+        &quot;wave&quot;: &quot;0.....1.&quot;
+      }
+    ]
+  },
+  &quot;render_artifact_id&quot;: &quot;00000000-0000-0000-0000-00000000000a&quot;,
+  &quot;summary&quot;: &quot;Initial extraction&quot;,
+  &quot;changes&quot;: []
+}</pre></details></article><article><div class="row"><span class="num">02</span><h2>VERIFY</h2><span class="pill">FALSE</span></div>
+    <p>ack_i is one beat early</p><p class="meta">input_step_id：00000000-0000-0000-0000-000000000001</p>
+    <details open><summary>output 完整內容</summary><pre>{
+  &quot;match&quot;: &quot;FALSE&quot;,
+  &quot;summary&quot;: &quot;ack_i is one beat early&quot;,
+  &quot;checked_at&quot;: null,
+  &quot;checked_at_display&quot;: null,
+  &quot;diff_count&quot;: 1,
+  &quot;diffs&quot;: [
+    {
+      &quot;id&quot;: &quot;00000000-0000-0000-0000-000000000014&quot;,
+      &quot;category&quot;: &quot;TIMING&quot;,
+      &quot;target&quot;: &quot;signal:ack_i&quot;,
+      &quot;description&quot;: &quot;Rising edge is early&quot;,
+      &quot;expected&quot;: &quot;Rise at beat 7&quot;,
+      &quot;actual&quot;: &quot;Rise at beat 6&quot;
+    }
+  ],
+  &quot;suggestions&quot;: [
+    {
+      &quot;id&quot;: &quot;00000000-0000-0000-0000-000000000015&quot;,
+      &quot;diff_id&quot;: &quot;00000000-0000-0000-0000-000000000014&quot;,
+      &quot;target&quot;: &quot;signal:ack_i&quot;,
+      &quot;instruction&quot;: &quot;Move rising edge one beat later&quot;
+    }
+  ]
+}</pre></details></article><article><div class="row"><span class="num">03</span><h2>DRAWER</h2><span class="pill">完整 JSON ＋ 渲染圖</span></div>
+    <p>Corrected ack_i timing</p><p class="meta">input_step_id：00000000-0000-0000-0000-000000000002</p>
+    <details open><summary>output 完整內容</summary><pre>{
+  &quot;type&quot;: &quot;TIMING&quot;,
+  &quot;content_type&quot;: &quot;WAVEDROM&quot;,
+  &quot;content&quot;: {
+    &quot;signal&quot;: [
+      {
+        &quot;name&quot;: &quot;ack_i&quot;,
+        &quot;wave&quot;: &quot;0......1&quot;
+      }
+    ]
+  },
+  &quot;render_artifact_id&quot;: &quot;00000000-0000-0000-0000-00000000000b&quot;,
+  &quot;summary&quot;: &quot;Corrected ack_i timing&quot;,
+  &quot;changes&quot;: [
+    {
+      &quot;target&quot;: &quot;signal:ack_i&quot;,
+      &quot;description&quot;: &quot;Moved rising edge one beat later&quot;,
+      &quot;suggestion_id&quot;: &quot;00000000-0000-0000-0000-000000000015&quot;
+    }
+  ]
+}</pre></details></article><article><div class="row"><span class="num">04</span><h2>VERIFY</h2><span class="pill">TRUE</span></div>
+    <p>Matches source</p><p class="meta">input_step_id：00000000-0000-0000-0000-000000000003</p>
+    <details open><summary>output 完整內容</summary><pre>{
+  &quot;match&quot;: &quot;TRUE&quot;,
+  &quot;summary&quot;: &quot;Matches source&quot;,
+  &quot;checked_at&quot;: null,
+  &quot;checked_at_display&quot;: null,
+  &quot;diff_count&quot;: 0,
+  &quot;diffs&quot;: [],
+  &quot;suggestions&quot;: []
+}</pre></details></article></div><footer>output 的 JSON 可展開／收合。圖片以 artifact ID 引用，不將本示意當成真實模型成果。</footer></body></html>
