@@ -250,3 +250,23 @@ Worker 以 `X-Worker-Key` 建立 execution attempt；沙盒僅持有綁定該 ex
 需設定 `.env.example` 的兩組獨立密鑰並部署 `runtime.execution_attempt` 新表；DDL 位於
 `app/db/schema/03_runtime/03_execution_attempt.sql`。本次只編輯，未啟動服務、套用 DDL 或執行後端驗證。
 Broker publisher／consumer、ACK／inbox、退避重送與租約掃描仍待實作。
+# 免 Token 結果寫入測試
+
+`POST /results` 直接定義於 `app/main.py`，不需 Authorization 或 Worker Token。
+傳入資料庫中已存在的 execution UUID 與任意結果 JSON：
+
+```json
+{
+  "execution_id": "替換成既有 execution UUID",
+  "result_info": {
+    "type": "TIMING",
+    "content_type": "WAVEDROM",
+    "content": "{\"signal\":[{\"name\":\"clk\",\"wave\":\"p...\"}]}"
+  }
+}
+```
+
+成功回傳 HTTP 201 與 `id`、`execution_id`、`round_no`、`status`、`result_info`、`created_at`。
+不存在的 execution 回傳 404；無效 UUID 或非物件的 result_info 回傳 422。
+每次呼叫都新增一筆 `core.result`，輪次自動遞增，不覆蓋舊資料，也不改變 execution 狀態。
+`result_info` 原樣存入 JSONB；此測試入口不驗證新版 steps 契約，也不保證任意 JSON 能由工作台顯示。
